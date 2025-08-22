@@ -1,0 +1,122 @@
+INICIO
+
+    PROCEDIMIENTO principal
+        DEFINIR N, i COMO ENTERO
+        DEFINIR notas COMO MATRIZ[N][3]
+        DEFINIR promedios COMO VECTOR[N]
+        DEFINIR estados COMO VECTOR[N]
+        
+        // Entrada
+        LLAMAR leerCantidadEstudiantes(N)
+        LLAMAR leerNotas(notas, N)
+        
+        // Proceso
+        PARA i <- 1 HASTA N HACER
+            promedios[i] <- promedioDeNotas(notas[i])
+            estados[i] <- estaAprobado(promedios[i])
+        FIN PARA
+        
+        DEFINIR promGeneral COMO REAL
+        promGeneral <- promedioGeneral(promedios, N)
+        
+        DEFINIR totalAprobados, totalReprobados COMO ENTERO
+        LLAMAR contarEstados(estados, N, totalAprobados, totalReprobados)
+        
+        // Salida
+        LLAMAR mostrarResumen(promedios, estados, promGeneral, totalAprobados, totalReprobados, N)
+    FIN PROCEDIMIENTO
+
+
+    // Procedimientos de Entrada
+
+    PROCEDIMIENTO leerCantidadEstudiantes(REFERENCIA N)
+        REPETIR
+            IMPRIMIR "Ingrese cantidad de estudiantes: "
+            LEER N
+        HASTA QUE N > 0
+    FIN PROCEDIMIENTO
+
+
+    PROCEDIMIENTO leerNotas(REFERENCIA notas, N)
+        DEFINIR i, j COMO ENTERO
+        PARA i <- 1 HASTA N HACER
+            IMPRIMIR "Estudiante ", i
+            PARA j <- 1 HASTA 3 HACER
+                REPETIR
+                    IMPRIMIR "  Ingrese nota ", j, " [0..100]: "
+                    LEER notas[i][j]
+                HASTA QUE notas[i][j] >= 0 Y notas[i][j] <= 100
+            FIN PARA
+        FIN PARA
+    FIN PROCEDIMIENTO
+
+    // Funciones de Cálculo (Puras)
+
+    // Pre: notasEst[3] contiene valores en [0..100]
+    // Post: retorna el promedio de las 3 notas
+    FUNCION promedioDeNotas(notasEst) COMO REAL
+        RETORNAR (notasEst[1] + notasEst[2] + notasEst[3]) / 3
+    FIN FUNCION
+
+
+    // Pre: prom en [0..100]
+    // Post: retorna VERDADERO si prom ≥ 60, FALSO en caso contrario
+    FUNCION estaAprobado(prom COMO REAL) COMO LOGICO
+        SI prom >= 60 ENTONCES
+            RETORNAR VERDADERO
+        SINO
+            RETORNAR FALSO
+        FIN SI
+    FIN FUNCION
+
+
+    // Pre: promedios[N] contiene valores válidos
+    // Post: retorna el promedio general del grupo
+    FUNCION promedioGeneral(promedios, N) COMO REAL
+        DEFINIR suma COMO REAL
+        suma <- 0
+        DEFINIR i COMO ENTERO
+        PARA i <- 1 HASTA N HACER
+            suma <- suma + promedios[i]
+        FIN PARA
+        RETORNAR suma / N
+    FIN FUNCION
+
+
+    // Procesamiento de Resultados
+
+    PROCEDIMIENTO contarEstados(estados, N, REFERENCIA totalAprobados, REFERENCIA totalReprobados)
+        totalAprobados <- 0
+        totalReprobados <- 0
+        DEFINIR i COMO ENTERO
+        PARA i <- 1 HASTA N HACER
+            SI estados[i] = VERDADERO ENTONCES
+                totalAprobados <- totalAprobados + 1
+            SINO
+                totalReprobados <- totalReprobados + 1
+            FIN SI
+        FIN PARA
+    FIN PROCEDIMIENTO
+
+
+    // Procedimientos de Salida
+
+    PROCEDIMIENTO mostrarResumen(promedios, estados, promGeneral, totalAprobados, totalReprobados, N)
+        DEFINIR i COMO ENTERO
+        IMPRIMIR "===== RESUMEN GENERAL ====="
+        PARA i <- 1 HASTA N HACER
+            SI estados[i] = VERDADERO ENTONCES
+                IMPRIMIR "Estudiante ", i, ": Promedio = ", promedios[i], " -> Aprobado"
+            SINO
+                IMPRIMIR "Estudiante ", i, ": Promedio = ", promedios[i], " -> Reprobado"
+            FIN SI
+        FIN PARA
+        
+        IMPRIMIR "Promedio General del Grupo: ", promGeneral
+        IMPRIMIR "Total Aprobados: ", totalAprobados
+        IMPRIMIR "Total Reprobados: ", totalReprobados
+    FIN PROCEDIMIENTO
+
+    LLAMAR principal
+
+FIN
