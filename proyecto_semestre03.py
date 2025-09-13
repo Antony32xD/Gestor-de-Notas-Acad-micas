@@ -1,3 +1,4 @@
+import os
 from collections import deque
 
 # ==================== LISTAS ====================
@@ -29,28 +30,39 @@ def mostrar_menu():
 13. Salir
 ========================
 """)
-
+# esta funcion fue agregada el 11/09/2025, limpia la terinal para un espacio mas ordenado
+def limpiar_terminal():
+        if os.name == 'nt':
+            os.system('cls')
+        else:
+            os.system('clear')
 # ==================== FUNCIONES ====================
 #Antony32xD
+
 # 1 Registrar curso
 def registrar_curso_lista():
     try:
         n = int(input("Ingrese la cantidad de cursos a registrar: "))
     except ValueError:
         print("Ingrese un número válido")
+       
         return
+    
+    limpiar_terminal()
     
     for i in range(1, n+1):
         while True:
             curso = input(f"Ingrese el nombre del curso {i}: ").strip()
             if not curso:
-                print("No puede estar vacío")
+                print("No puede estar vacío este campo")
                 continue
             if curso in cursos_lista:
                 print(f"El curso '{curso}' ya está registrado.")
                 continue
             break
 
+        
+        
         while True:
             try:
                 nota = float(input(f"Ingrese la nota para {curso}: "))
@@ -60,9 +72,13 @@ def registrar_curso_lista():
                     print("La nota debe estar entre 0 y 100")
             except ValueError:
                 print("Nota inválida, intente de nuevo")
-
+        
+        
+        
         cursos_lista.append(curso)
         notas_lista.append(nota)
+
+        limpiar_terminal()
 #Antony32xD
     print("\nCursos y notas registradas:")
     for i in range(len(cursos_lista)):
@@ -85,20 +101,22 @@ def promedio():
     print("\nCursos y notas actuales:")
     for i in range(len(cursos_lista)):
         print(f"{cursos_lista[i]}: {notas_lista[i]}")
+   
     prom = sum(notas_lista)/len(notas_lista)
-    print(f"\nEl promedio de las notas es: {prom:.2f}")
+    print(f"\nEl promedio de las notas es: {prom:.2f}") #el .2f nos indica que solo mostrara 2 decimales
 
 # 4 Aprobados y reprobados
 def cursos_aprobados_reprobados():
     if not cursos_lista:
-        print("No hay cursos registrados")
+        print("No hay cursos registrados") # hararevision sino hay nada en la lista de cursos, mostrara el mensaje
         return
-    aprobados, reprobados = [], []
+    aprobados, reprobados = [], [] #cree 2 listas donde almacenare los aprobados y los reporbados
     for i in range(len(cursos_lista)):
         if notas_lista[i] >= 61:
-            aprobados.append((cursos_lista[i], notas_lista[i]))
+            aprobados.append((cursos_lista[i], notas_lista[i])) #en caso de que la nota sea >= 61 sera agregado a la lsita aporbados
         else:
-            reprobados.append((cursos_lista[i], notas_lista[i]))
+            reprobados.append((cursos_lista[i], notas_lista[i])) # ocurre lo ismo para la lista reprobados, teniendo en cuenta que sino es >= 61 sera <61
+   
     print("\nCursos Aprobados:")
     if aprobados:
         for c,n in aprobados:
@@ -137,6 +155,9 @@ def actualizar_nota():
         idx = cursos_lista.index(nombre)
         nota_anterior = notas_lista[idx]
         print(f"Nota actual de {nombre}: {nota_anterior}")
+        
+        
+        
         while True:
             try:
                 nueva = float(input("Ingrese nueva nota: "))
@@ -145,6 +166,9 @@ def actualizar_nota():
                 else:
                     print("La nota debe estar entre 0 y 100")
             except ValueError:
+                
+                
+                
                 print("Ingrese un número válido")
         notas_lista[idx] = nueva
         print(f"Nota actualizada: {nombre} - {nueva}")
@@ -161,13 +185,20 @@ def borrar_curso_lista():
     print("\nCursos registrados:")
     for i,c in enumerate(cursos_lista):
         print(f"{i+1}. {c} - Nota: {notas_lista[i]}")
+   
     try:
         sel = int(input("Elija número de curso a borrar: "))
         if 1 <= sel <= len(cursos_lista):
+
+            
+
             conf = input(f"¿Está seguro de borrar '{cursos_lista[sel-1]}'? (s/n): ").lower()
             if conf=="s":
-                eliminado_c = cursos_lista.pop(sel-1)
+                eliminado_c = cursos_lista.pop(sel-1) # el pop elimina tanto el curso como la nota de la lista, cabe aclarar media vez el programa siga corriendo
                 eliminado_n = notas_lista.pop(sel-1)
+                
+                limpiar_terminal()
+                
                 print(f"Curso '{eliminado_c}' con nota {eliminado_n} eliminado.")
             else:
                 print("Operación cancelada")
@@ -208,6 +239,9 @@ def buscar_curso_binario():
     nombre = input("Ingrese el nombre del curso: ").strip().lower()
     ordenar_por_nombre()
     izq, der = 0, len(cursos_lista)-1
+    
+    
+    
     while izq<=der:
         medio = (izq+der)//2
         curso_actual = cursos_lista[medio].lower()
@@ -234,11 +268,16 @@ def simular_cola_revision():
         print("2. Atender primera solicitud")
         print("3. Mostrar solicitudes")
         print("4. Salir de submenú")
+        
         try:
             opcion = int(input("Elija opción (1-4): "))
         except ValueError:
             print("Ingrese un número válido")
             continue
+        
+        limpiar_terminal()
+        
+        
         if opcion==1:
             nombre = input("Ingrese nombre del curso: ").strip()
             if nombre in cursos_lista:
@@ -246,6 +285,9 @@ def simular_cola_revision():
                 print(f"Solicitud agregada para: {nombre}")
             else:
                 print("Curso no registrado")
+       
+            
+       
         elif opcion==2:
             if cola_revisiones:
                 curso = cola_revisiones.popleft()
@@ -321,19 +363,26 @@ def ejecutar_opcion(opcion):
         case _:
             print("Opción inválida")
     return True
-
 # ==================== BUCLE PRINCIPAL ====================
 while True:
     mostrar_menu()
     try:
         opcion = int(input("Elige una opción (1-13): "))
     except ValueError:
+
         print("Debes ingresar un número válido")
         continue
+    
+    limpiar_terminal()
+
     if not ejecutar_opcion(opcion):
         break
+    
     resp = input("\n¿Desea realizar otra operación? (s/n): ").lower()
     if resp != "s":
+      
         print("Programa terminado")
         break
+    else:
+        limpiar_terminal()
 #Antony32xD
