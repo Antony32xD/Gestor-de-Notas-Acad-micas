@@ -1,182 +1,212 @@
 INICIO
 
-    // ==================== DECLARACIÓN DE LISTAS Y ESTRUCTURAS ====================
+    // ==================== DECLARACIÓN DE ESTRUCTURAS ====================
     cursos_lista ← ["Mate Discreta", "Contabilidad 2", "Pre Cálculo", "Algebra Lineal", "Algoritmos"]
     notas_lista ← [85, 65, 61, 84, 99]
-    cola_revisiones ← Cola vacía
-    historial_cambios ← Lista vacía
+    cola_revisiones ← []              // Simula una cola de solicitudes
+    historial_cambios ← []            // Simula una pila de cambios realizados
 
-    // ==================== FUNCIONES ====================
-    
-    FUNCION limpiar_terminal
-        SI sistema es Windows ENTONCES
-            ejecutar "cls"
-        SINO
-            ejecutar "clear"
-        FIN SI
+    // ==================== DEFINICIÓN DE FUNCIONES ====================
+
+    FUNCION mostrar_menu()
+        IMPRIMIR el menú principal con las 13 opciones
     FIN FUNCION
 
-    FUNCION mostrar_menu
-        IMPRIMIR menú con opciones 1 a 13
-    FIN FUNCION
+    FUNCION registrar_curso_lista()
+        LEER cantidad de cursos a registrar
+        PARA i DESDE 1 HASTA n HACER
+            LEER nombre del curso
+            MIENTRAS el nombre esté vacío O ya exista en cursos_lista HACER
+                PEDIR nuevamente el nombre
+            FIN MIENTRAS
 
-    FUNCION registrar_curso_lista
-        LEER cantidad n de cursos
-        limpiar_terminal()
-        PARA i ← 1 HASTA n HACER
-            LEER nombre curso
-            VALIDAR que no esté vacío ni repetido
-            LEER nota curso
-            VALIDAR que esté entre 0 y 100
+            LEER nota del curso
+            MIENTRAS nota < 0 O nota > 100 HACER
+                PEDIR nuevamente la nota
+            FIN MIENTRAS
+
             AGREGAR curso a cursos_lista
             AGREGAR nota a notas_lista
-            limpiar_terminal()
         FIN PARA
-        IMPRIMIR cursos y notas registrados
+        MOSTRAR todos los cursos registrados
     FIN FUNCION
 
-    FUNCION mostrar_cursos_lista
-        SI cursos_lista vacía ENTONCES
-            IMPRIMIR "No hay cursos"
+    FUNCION mostrar_cursos_lista()
+        SI cursos_lista ESTÁ VACÍA ENTONCES
+            IMPRIMIR "No hay cursos registrados"
         SINO
-            IMPRIMIR todos los cursos y notas
+            PARA i DESDE 0 HASTA longitud(cursos_lista) - 1 HACER
+                IMPRIMIR curso[i], nota[i]
+            FIN PARA
         FIN SI
     FIN FUNCION
 
-    FUNCION promedio
-        SI cursos_lista vacía ENTONCES
-            IMPRIMIR "No hay cursos"
+    FUNCION promedio()
+        SI cursos_lista ESTÁ VACÍA ENTONCES
+            IMPRIMIR "No hay cursos registrados"
         SINO
-            CALCULAR promedio de notas_lista
+            suma ← SUMA(notas_lista)
+            promedio ← suma / longitud(notas_lista)
             IMPRIMIR promedio
         FIN SI
     FIN FUNCION
 
-    FUNCION cursos_aprobados_reprobados
-        SI cursos_lista vacía ENTONCES
-            IMPRIMIR "No hay cursos"
+    FUNCION cursos_aprobados_reprobados()
+        aprobados ← []
+        reprobados ← []
+        PARA i DESDE 0 HASTA longitud(cursos_lista) - 1 HACER
+            SI notas_lista[i] >= 61 ENTONCES
+                AGREGAR (curso, nota) A aprobados
+            SINO
+                AGREGAR (curso, nota) A reprobados
+            FIN SI
+        FIN PARA
+        IMPRIMIR aprobados y reprobados
+    FIN FUNCION
+
+    FUNCION buscar_curso()
+        LEER nombre del curso
+        SI nombre EXISTE EN cursos_lista ENTONCES
+            índice ← posición de nombre en cursos_lista
+            nota ← notas_lista[índice]
+            IMPRIMIR curso, nota, y estado (Aprobado o Reprobado)
         SINO
-            aprobados ← []
-            reprobados ← []
-            PARA cada curso en cursos_lista HACER
-                SI nota ≥ 61 ENTONCES
-                    AGREGAR a aprobados
-                SINO
-                    AGREGAR a reprobados
+            IMPRIMIR "Curso no encontrado"
+        FIN SI
+    FIN FUNCION
+
+    FUNCION actualizar_nota()
+        LEER nombre del curso
+        SI nombre EXISTE EN cursos_lista ENTONCES
+            índice ← posición de nombre
+            LEER nueva_nota
+            notas_lista[índice] ← nueva_nota
+            AGREGAR cambio a historial_cambios
+        SINO
+            IMPRIMIR "Curso no encontrado"
+        FIN SI
+    FIN FUNCION
+
+    FUNCION borrar_curso_lista()
+        MOSTRAR cursos registrados con índice
+        LEER número de curso a eliminar
+        SI número válido ENTONCES
+            CONFIRMAR eliminación
+            ELIMINAR curso y nota de ambas listas
+        SINO
+            IMPRIMIR "Número inválido"
+        FIN SI
+    FIN FUNCION
+
+    FUNCION ordenar_por_nota_burbuja()
+        PARA i DESDE 0 HASTA n-1 HACER
+            PARA j DESDE 0 HASTA n-i-2 HACER
+                SI notas_lista[j] > notas_lista[j+1] ENTONCES
+                    INTERCAMBIAR notas_lista[j] CON notas_lista[j+1]
+                    INTERCAMBIAR cursos_lista[j] CON cursos_lista[j+1]
                 FIN SI
             FIN PARA
-            IMPRIMIR aprobados y reprobados
-        FIN SI
+        FIN PARA
+        IMPRIMIR cursos ordenados por nota
     FIN FUNCION
 
-    FUNCION buscar_curso
-        LEER nombre curso
-        SI nombre está en cursos_lista ENTONCES
-            IMPRIMIR nota y estado (Aprobado/Reprobado)
-        SINO
-            IMPRIMIR "Curso no registrado"
-        FIN SI
+    FUNCION ordenar_por_nombre_insercion()
+        PARA i DESDE 1 HASTA longitud(cursos_lista)-1 HACER
+            curso_actual ← cursos_lista[i]
+            nota_actual ← notas_lista[i]
+            j ← i - 1
+            MIENTRAS j >= 0 Y cursos_lista[j] > curso_actual HACER
+                cursos_lista[j + 1] ← cursos_lista[j]
+                notas_lista[j + 1] ← notas_lista[j]
+                j ← j - 1
+            FIN MIENTRAS
+            cursos_lista[j + 1] ← curso_actual
+            notas_lista[j + 1] ← nota_actual
+        FIN PARA
+        IMPRIMIR cursos ordenados alfabéticamente
     FIN FUNCION
 
-    FUNCION actualizar_nota
-        LEER nombre curso
-        SI curso existe EN cursos_lista ENTONCES
-            LEER nueva nota
-            VALIDAR nota entre 0 y 100
-            GUARDAR cambio en historial_cambios
-            ACTUALIZAR nota en notas_lista
-        SINO
-            IMPRIMIR "Curso no registrado"
-        FIN SI
+    FUNCION buscar_curso_binario()
+        ORDENAR cursos por nombre
+        izq ← 0
+        der ← longitud(cursos_lista) - 1
+        LEER nombre_buscado
+        MIENTRAS izq ≤ der HACER
+            medio ← (izq + der) DIV 2
+            SI cursos_lista[medio] = nombre_buscado ENTONCES
+                IMPRIMIR curso y nota
+                SALIR
+            SINO SI nombre_buscado < cursos_lista[medio] ENTONCES
+                der ← medio - 1
+            SINO
+                izq ← medio + 1
+            FIN SI
+        FIN MIENTRAS
+        IMPRIMIR "Curso no encontrado"
     FIN FUNCION
 
-    FUNCION borrar_curso_lista
-        MOSTRAR lista de cursos
-        LEER número de curso a borrar
-        CONFIRMAR eliminación
-        ELIMINAR curso y nota de las listas
-        limpiar_terminal()
-        IMPRIMIR confirmación
-    FIN FUNCION
-
-    FUNCION ordenar_por_nota_burbuja
-        ORDENAR cursos y notas de menor a mayor según nota
-        IMPRIMIR lista ordenada
-    FIN FUNCION
-
-    FUNCION ordenar_por_nombre
-        ORDENAR cursos y notas alfabéticamente
-        IMPRIMIR lista ordenada
-    FIN FUNCION
-
-    FUNCION buscar_curso_binario
-        LEER nombre curso
-        ORDENAR cursos alfabéticamente
-        REALIZAR búsqueda binaria
-        SI encontrado ENTONCES
-            IMPRIMIR nota y estado
-        SINO
-            IMPRIMIR "Curso no registrado"
-        FIN SI
-    FIN FUNCION
-
-    FUNCION simular_cola_revision
-        MIENTRAS True HACER
-            IMPRIMIR submenú de cola
+    FUNCION simular_cola_revision()
+        MIENTRAS VERDADERO HACER
+            IMPRIMIR submenú de revisiones
             LEER opción
-            limpiar_terminal()
             SEGÚN opción HACER
-                1: AGREGAR solicitud a cola
-                2: ATENDER primera solicitud, actualizar nota, registrar historial
-                3: MOSTRAR solicitudes
-                4: SALIR submenú
+                CASO 1:
+                    LEER nombre del curso
+                    AGREGAR curso a cola_revisiones
+                CASO 2:
+                    SI cola NO vacía ENTONCES
+                        curso ← cola_revisiones[0]
+                        LEER nueva nota
+                        ACTUALIZAR nota
+                        AGREGAR cambio al historial
+                    SINO
+                        IMPRIMIR "Cola vacía"
+                    FIN SI
+                CASO 3:
+                    MOSTRAR solicitudes pendientes
+                CASO 4:
+                    SALIR DEL SUBMENÚ
             FIN SEGÚN
         FIN MIENTRAS
     FIN FUNCION
 
-    FUNCION mostrar_historial
-        SI historial_cambios no está vacío ENTONCES
-            IMPRIMIR historial (más reciente primero)
+    FUNCION mostrar_historial()
+        SI historial_cambios NO está vacío ENTONCES
+            MOSTRAR cada registro en orden inverso
         SINO
-            IMPRIMIR "No hay cambios"
+            IMPRIMIR "No hay cambios registrados"
         FIN SI
     FIN FUNCION
 
     FUNCION ejecutar_opcion(opcion)
         SEGÚN opcion HACER
-            1: registrar_curso_lista()
-            2: mostrar_cursos_lista()
-            3: promedio()
-            4: cursos_aprobados_reprobados()
-            5: buscar_curso()
-            6: actualizar_nota()
-            7: borrar_curso_lista()
-            8: ordenar_por_nota_burbuja()
-            9: ordenar_por_nombre()
-            10: buscar_curso_binario()
-            11: simular_cola_revision()
-            12: mostrar_historial()
-            13: IMPRIMIR "Saliendo" → RETORNAR FALSO
+            CASO 1: registrar_curso_lista()
+            CASO 2: mostrar_cursos_lista()
+            CASO 3: promedio()
+            CASO 4: cursos_aprobados_reprobados()
+            CASO 5: buscar_curso()
+            CASO 6: actualizar_nota()
+            CASO 7: borrar_curso_lista()
+            CASO 8: ordenar_por_nota_burbuja()
+            CASO 9: ordenar_por_nombre_insercion()
+            CASO 10: buscar_curso_binario()
+            CASO 11: simular_cola_revision()
+            CASO 12: mostrar_historial()
+            CASO 13: SALIR DEL PROGRAMA
             OTRO: IMPRIMIR "Opción inválida"
         FIN SEGÚN
-        RETORNAR VERDADERO
     FIN FUNCION
 
-// ==================== BUCLE PRINCIPAL ====================
-MIENTRAS True HACER
-    mostrar_menu()
-    LEER opcion
-    limpiar_terminal()
-    SI ejecutar_opcion(opcion) = FALSO ENTONCES
-        SALIR BUCLE
-    FIN SI
-    LEER respuesta "¿Desea realizar otra operación? (s/n)"
-    SI respuesta ≠ "s" ENTONCES
-        IMPRIMIR "Programa terminado"
-        SALIR BUCLE
-    SINO
-        limpiar_terminal()
-    FIN SI
-FIN MIENTRAS
+    // ==================== PROGRAMA PRINCIPAL ====================
+    MIENTRAS VERDADERO HACER
+        mostrar_menu()
+        LEER opción
+        ejecutar_opcion(opción)
+        PREGUNTAR si desea realizar otra operación
+        SI respuesta ≠ "s" ENTONCES
+            IMPRIMIR "Programa terminado"
+            SALIR DEL BUCLE
+        FIN SI
+    FIN MIENTRAS
 
 FIN
