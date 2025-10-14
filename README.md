@@ -101,3 +101,28 @@ Propósito del código:
 
 Este programa está dirigido a estudiantes o docentes que desean gestionar sus cursos y notas de forma eficiente.
 Además, sirve como un ejemplo educativo de cómo aplicar conceptos de programación como listas, pilas, colas, funciones, validación de datos y manejo de errores en Python, manteniendo una interfaz amigable y limpia.
+
+
+preguntas de reflexión:
+1. que aprendí?
+   con la realización de este proyecto en pytho, que es un nuevo lenguaje de programación para mi, aprendi a pulir las pocas habilidades que tenia en
+   programacion y la resolucion de problemas.
+2. lo mas desafiante?
+   la realizacion de la simulacion de revision ya que no me habia enfrentado a hacer algo similar sin embargo se logor por lo que estoy satisfecho con eso
+3. que mejoraria?
+   Aunque el sistema cumple con su propósito principal de gestionar cursos y notas de forma correcta, existen varias mejoras que podrían hacerlo más robusto, moderno y escalable. Algunas de ellas son:
+
+Implementar almacenamiento permanente:
+Actualmente los datos se pierden al cerrar el programa. Una mejora sería guardar y leer la información desde un archivo JSON o una base de datos SQLite, para conservar los registros de manera persistente.
+
+Migrar a Programación Orientada a Objetos (POO):
+Reestructurar el código en clases y objetos permitiría una mayor organización, reutilización y facilidad de mantenimiento del sistema.
+
+Crear una interfaz gráfica (GUI):
+Desarrollar una interfaz visual con Tkinter o PyQt haría el programa más intuitivo y atractivo para el usuario, eliminando la necesidad de escribir comandos en consola.
+
+Agregar validaciones más completas:
+Incluir manejo de errores con try-except y mensajes personalizados mejoraría la estabilidad del sistema y evitaría cierres inesperados.
+
+Incorporar nuevas funcionalidades:
+Como exportar reportes en PDF, calcular estadísticas avanzadas (máxima, mínima, promedio general) o mostrar gráficos de rendimiento con librerías como matplotlib.
