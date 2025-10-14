@@ -186,17 +186,27 @@ def ordenar_por_nota_burbuja():
     for c,n in zip(cursos_lista, notas_lista):
         print(f"{c}: {n}")
 
-# 9 Ordenar por nombre (burbuja)
-def ordenar_por_nombre():
+# 9 Ordenar por nombre (inserción)
+def ordenar_por_nombre_insercion():
     n = len(cursos_lista)
-    for i in range(n):
-        for j in range(0,n-i-1):
-            if cursos_lista[j].lower()>cursos_lista[j+1].lower():
-                cursos_lista[j], cursos_lista[j+1] = cursos_lista[j+1], cursos_lista[j]
-                notas_lista[j], notas_lista[j+1] = notas_lista[j+1], notas_lista[j]
-    print("\nCursos ordenados alfabéticamente:")
-    for c,n in zip(cursos_lista, notas_lista):
+    for i in range(1, n):
+        curso_actual = cursos_lista[i]
+        nota_actual = notas_lista[i]
+        j = i - 1
+        
+        # Mueve los elementos mayores que curso_actual una posición adelante
+        while j >= 0 and cursos_lista[j].lower() > curso_actual.lower():
+            cursos_lista[j + 1] = cursos_lista[j]
+            notas_lista[j + 1] = notas_lista[j]
+            j -= 1
+        
+        cursos_lista[j + 1] = curso_actual
+        notas_lista[j + 1] = nota_actual
+    
+    print("\nCursos ordenados alfabéticamente (ordenamiento por inserción):")
+    for c, n in zip(cursos_lista, notas_lista):
         print(f"{c}: {n}")
+
 
 # 10 Búsqueda binaria
 def buscar_curso_binario():
@@ -204,7 +214,7 @@ def buscar_curso_binario():
         print("No hay cursos registrados")
         return
     nombre = input("Ingrese el nombre del curso: ").strip().lower()
-    ordenar_por_nombre()
+    ordenar_por_nombre_insercion()
     izq, der = 0, len(cursos_lista)-1
     while izq<=der:
         medio = (izq+der)//2
@@ -307,7 +317,7 @@ def ejecutar_opcion(opcion):
         case 8:
             ordenar_por_nota_burbuja()
         case 9:
-            ordenar_por_nombre()
+            ordenar_por_nombre_insercion()
         case 10:
             buscar_curso_binario()
         case 11:
@@ -315,6 +325,7 @@ def ejecutar_opcion(opcion):
         case 12:
             mostrar_historial()
         case 13:
+            print("Gracias por usar el Gestor de notas academicas, ¡Hasta ppronto!")
             print("Saliendo del programa...")
             return False
         case _:
